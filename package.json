@@ -1,0 +1,27 @@
+{
+  "name": "jetpack-serve",
+  "version": "1.0.0",
+  "description": "Jetpack's standalone middleware for serving built bundles",
+  "main": "index.js",
+  "scripts": {
+    "test": "healthier && prettier --check '**/*.{js,json,css,yml}'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KidkArolis/jetpack-serve.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KidkArolis/jetpack-serve/issues"
+  },
+  "homepage": "https://github.com/KidkArolis/jetpack-serve#readme",
+  "devDependencies": {
+    "healthier": "^2.0.0",
+    "np": "^5.0.3",
+    "prettier": "^1.18.2"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
