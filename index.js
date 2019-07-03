@@ -17,18 +17,26 @@ module.exports = function jetpack({ dist = 'dist' } = {}) {
   const router = new express.Router()
 
   const modernBrowserRegexp = browsers.regexp({ modern: true })
-  const modernBundleExists = fs.existsSync(path.join(dist, 'index.html'))
-  const legacyBundleExists = fs.existsSync(path.join(dist, 'index.legacy.html'))
+  const modernBundleExists = exists(path.join(dist, 'index.html'))
+  const legacyBundleExists = exists(path.join(dist, 'index.legacy.html'))
+  console.log(modernBundleExists)
 
   if (env === 'development') {
     router.get('*', require('jetpack/serve'))
   } else {
-    router.use('/', express.static(dist))
+    router.use('/', express.static(dist, { index: false }))
     router.get('*', (req, res, next) => {
       if (req.method !== 'GET' && req.method !== 'HEAD') return next()
-      res.sendfile(getIndex(req.headers['user-agent']))
+      const index = getIndex(req.headers['user-agent'])
+      if (index) {
+        res.sendFile(index, { root: dist })
+      } else {
+        res.sendStatus(404)
+      }
     })
   }
+
+  return router
 
   function getIndex(userAgent) {
     if (!legacyBundleExists && !modernBundleExists) {
@@ -53,4 +61,13 @@ module.exports = function jetpack({ dist = 'dist' } = {}) {
 
 module.exports.regexp = function({ modern = true } = {}) {
   return browsers.regexp()
+}
+
+function exists(file) {
+  try {
+    fs.accessSync(file, fs.constants.F_O)
+    return true
+  } catch (err) {
+    return false
+  }
 }
