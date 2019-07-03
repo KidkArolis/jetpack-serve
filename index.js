@@ -19,7 +19,6 @@ module.exports = function jetpack({ dist = 'dist' } = {}) {
   const modernBrowserRegexp = browsers.regexp({ modern: true })
   const modernBundleExists = exists(path.join(dist, 'index.html'))
   const legacyBundleExists = exists(path.join(dist, 'index.legacy.html'))
-  console.log(modernBundleExists)
 
   if (env === 'development') {
     router.get('*', require('jetpack/serve'))
