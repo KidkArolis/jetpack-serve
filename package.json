@@ -1,6 +1,6 @@
 {
   "name": "jetpack-serve",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Jetpack's standalone middleware for serving built bundles",
   "main": "index.js",
   "scripts": {
