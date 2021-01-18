@@ -34,9 +34,9 @@ const jetpackDefaultBrowserslist = {
     'not ios_saf < 11.4',
     'not and_chr < 71',
     'not and_ff < 64',
-    'not ie <= 11'
+    'not ie <= 11',
   ].join(', '),
-  legacy: undefined
+  legacy: undefined,
 }
 
 function query(options) {
@@ -49,7 +49,7 @@ function query(options) {
 function regexp(options) {
   return browserslistUseragentRegexp.getUserAgentRegExp({
     browsers: query(options),
-    allowHigherVersions: true
+    allowHigherVersions: true,
   })
 }
 

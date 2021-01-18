@@ -11,9 +11,9 @@ const path = require('path')
 const express = require('express')
 const browsers = require('./browsers')
 
-const env = process.env.NODE_ENV || 'development'
+const nodeEnv = process.env.NODE_ENV || 'development'
 
-module.exports = function jetpack({ dist = 'dist' } = {}) {
+module.exports = function jetpack({ dist = 'dist', env = nodeEnv } = {}) {
   const router = new express.Router()
 
   const modernBrowserRegexp = browsers.regexp({ modern: true })
@@ -58,7 +58,7 @@ module.exports = function jetpack({ dist = 'dist' } = {}) {
   }
 }
 
-module.exports.regexp = function({ modern = true } = {}) {
+module.exports.regexp = function ({ modern = true } = {}) {
   return browsers.regexp()
 }
 

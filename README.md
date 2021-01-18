@@ -31,4 +31,11 @@ app.listen(3000, function() {
 })
 ```
 
+## Options
+
+Jetpack takes the following options:
+
+- `dist` - default: `"dist"`
+- `env` - default: the value of `process.env.NODE_ENV`, set to `"production"` to serve built bundle from dist
+
 This package handles **jetpack's differential builds**! That is a modern or legacy bundle will be served based on the user agent of the browser.
