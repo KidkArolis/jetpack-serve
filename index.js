@@ -16,7 +16,6 @@ const nodeEnv = process.env.NODE_ENV || 'development'
 module.exports = function jetpack({ dist = 'dist', env = nodeEnv } = {}) {
   const router = new express.Router()
 
-  const modernBrowserRegexp = browsers.regexp({ modern: true })
   const modernBundleExists = exists(path.join(dist, 'index.html'))
   const legacyBundleExists = exists(path.join(dist, 'index.legacy.html'))
 
@@ -24,20 +23,25 @@ module.exports = function jetpack({ dist = 'dist', env = nodeEnv } = {}) {
     router.get('*', require('jetpack/serve'))
   } else {
     router.use('/', express.static(dist, { index: false }))
-    router.get('*', (req, res, next) => {
-      if (req.method !== 'GET' && req.method !== 'HEAD') return next()
-      const index = getIndex(req.headers['user-agent'])
-      if (index) {
-        res.sendFile(index, { root: dist })
-      } else {
-        res.sendStatus(404)
+    router.get('*', async (req, res, next) => {
+      try {
+        if (req.method !== 'GET' && req.method !== 'HEAD') return next()
+        const modernBrowserRegex = await getModernBrowserRegex()
+        const index = getIndex(req.headers['user-agent'], modernBrowserRegex)
+        if (index) {
+          res.sendFile(index, { root: dist })
+        } else {
+          res.sendStatus(404)
+        }
+      } catch (err) {
+        next(err)
       }
     })
   }
 
   return router
 
-  function getIndex(userAgent) {
+  function getIndex(userAgent, modernBrowserRegex) {
     if (!legacyBundleExists && !modernBundleExists) {
       return null
     }
@@ -50,7 +54,7 @@ module.exports = function jetpack({ dist = 'dist', env = nodeEnv } = {}) {
       return '/index.legacy.html'
     }
 
-    if (userAgent && modernBrowserRegexp.test(userAgent)) {
+    if (userAgent && modernBrowserRegex.test(userAgent)) {
       return '/index.html'
     }
 
@@ -69,4 +73,12 @@ function exists(file) {
   } catch (err) {
     return false
   }
+}
+
+let modernBrowserRegex
+async function getModernBrowserRegex() {
+  if (!modernBrowserRegex) {
+    modernBrowserRegex = browsers.regex({ modern: true })
+  }
+  return modernBrowserRegex
 }
