@@ -62,8 +62,8 @@ module.exports = function jetpack({ dist = 'dist', env = nodeEnv } = {}) {
   }
 }
 
-module.exports.regexp = function ({ modern = true } = {}) {
-  return browsers.regexp()
+module.exports.regex = async function ({ modern = true } = {}) {
+  return browsers.regex()
 }
 
 function exists(file) {
@@ -78,7 +78,9 @@ function exists(file) {
 let modernBrowserRegex
 async function getModernBrowserRegex() {
   if (!modernBrowserRegex) {
-    modernBrowserRegex = browsers.regex({ modern: true })
+    modernBrowserRegex = browsers.regex({ modern: true }).then((re) => {
+      modernBrowserRegex = re
+    })
   }
   return modernBrowserRegex
 }
